@@ -27,21 +27,21 @@ class FileStorage:
         if cls is None:
             return self.__objects
         else:
-            cdi = {}
+            filtered_dict = {}
             for key, value in self.__objects.items():
                 if type(value) is cls:
-                    cdi[key] = value
-            return cdi
+                    filtered_dict[key] = value
+            return filtered_dict
 
     def delete(self, obj=None):
-        """Removes object from storage dict"""
+        """Removes an object from the storage dictionary"""
         if obj is not None:
             obj_key = obj.to_dict()['__class__'] + '.' + obj.id
             if obj_key in self.__objects.keys():
                 del self.__objects[obj_key]
 
     def new(self, obj):
-        """Add new obj to storage dict"""
+        """Adds new object to storage dictionary"""
         self.__objects.update(
             {obj.to_dict()['__class__'] + '.' + obj.id: obj}
         )
@@ -49,19 +49,19 @@ class FileStorage:
     def save(self):
         """Saves storage dictionary to file"""
         with open(self.__file_path, 'w') as file:
-            ren = {}
+            temp = {}
             for key, val in self.__objects.items():
-                ren[key] = val.to_dict()
-            json.dump(ren, file)
+                temp[key] = val.to_dict()
+            json.dump(temp, file)
 
     def reload(self):
         """Loads storage dictionary from file"""
         classes = self.model_classes
         if os.path.isfile(self.__file_path):
-            ren = {}
+            temp = {}
             with open(self.__file_path, 'r') as file:
-                ren = json.load(file)
-                for key, val in ren.items():
+                temp = json.load(file)
+                for key, val in temp.items():
                     self.all()[key] = classes[val['__class__']](**val)
 
     def close(self):
