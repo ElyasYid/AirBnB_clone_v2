@@ -13,3 +13,4 @@ class Amenity(BaseModel, Base):
     name = Column(
         String(128), nullable=False
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else ''
+
