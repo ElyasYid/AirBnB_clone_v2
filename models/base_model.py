@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
+"""Define base class for all models for hbnb clone"""
 import os
 import uuid
 from datetime import datetime
@@ -29,7 +29,6 @@ class BaseModel:
                         setattr(self, key, datetime.fromisoformat(value))
                     else:
                         setattr(self, key, value)
-            # if os.getenv('HBNB_TYPE_STORAGE') in ('db'):
             if not hasattr(kwargs, 'id'):
                 setattr(self, 'id', str(uuid.uuid4()))
             if not hasattr(kwargs, 'created_at'):
@@ -38,12 +37,12 @@ class BaseModel:
                 setattr(self, 'updated_at', datetime.now())
 
     def __str__(self):
-        """Returns a string representation of the instance"""
+        """Returns str rep of instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def delete(self):
-        """Deletes this BaseModel instance from the storage"""
+        """Deletes instance from storage"""
         from models import storage
         storage.delete(self)
 
@@ -56,12 +55,12 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        res = {}
+        opa = {}
         for key, value in self.__dict__.items():
             if key != '_sa_instance_state':
                 if isinstance(value, datetime):
-                    res[key] = value.isoformat()
+                    opa[key] = value.isoformat()
                 else:
-                    res[key] = value
-        res['__class__'] = self.__class__.__name__
-        return res
+                    opa[key] = value
+        opa['__class__'] = self.__class__.__name__
+        return opa
