@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-"""This module defines a class to manage file storage for hbnb clone"""
+"""defines class to manage file storage for hbnb clone"""
 import json
 import os
 from importlib import import_module
 
 
 class FileStorage:
-    """This class manages storage of hbnb models in JSON format"""
+    """class for  storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
 
@@ -23,25 +23,25 @@ class FileStorage:
         }
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
+        """Returns a dict of models in storage"""
         if cls is None:
             return self.__objects
         else:
-            filtered_dict = {}
+            c_dict = {}
             for key, value in self.__objects.items():
                 if type(value) is cls:
-                    filtered_dict[key] = value
-            return filtered_dict
+                    c_dict[key] = value
+            return c_dict
 
     def delete(self, obj=None):
-        """Removes an object from the storage dictionary"""
+        """Removes obj from storage dictionary"""
         if obj is not None:
             obj_key = obj.to_dict()['__class__'] + '.' + obj.id
             if obj_key in self.__objects.keys():
                 del self.__objects[obj_key]
 
     def new(self, obj):
-        """Adds new object to storage dictionary"""
+        """Adds new obj storage dictionary"""
         self.__objects.update(
             {obj.to_dict()['__class__'] + '.' + obj.id: obj}
         )
@@ -49,19 +49,19 @@ class FileStorage:
     def save(self):
         """Saves storage dictionary to file"""
         with open(self.__file_path, 'w') as file:
-            temp = {}
+            kamp = {}
             for key, val in self.__objects.items():
-                temp[key] = val.to_dict()
-            json.dump(temp, file)
+                kamp[key] = val.to_dict()
+            json.dump(kamp, file)
 
     def reload(self):
         """Loads storage dictionary from file"""
         classes = self.model_classes
         if os.path.isfile(self.__file_path):
-            temp = {}
+            iola = {}
             with open(self.__file_path, 'r') as file:
-                temp = json.load(file)
-                for key, val in temp.items():
+                iola = json.load(file)
+                for key, val in iola.items():
                     self.all()[key] = classes[val['__class__']](**val)
 
     def close(self):
