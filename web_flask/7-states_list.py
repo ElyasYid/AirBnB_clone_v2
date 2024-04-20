@@ -15,10 +15,10 @@ app.url_map.strict_slashes = False
 @app.route('/states_list')
 def states_list():
     '''The states_list page.'''
-    comp_states = list(storage.all(State).values())
-    comp_states.sort(key=lambda x: x.name)
+    all_states = list(storage.all(State).values())
+    all_states.sort(key=lambda x: x.name)
     ctxt = {
-        'states': comp_states
+        'states': all_states
     }
     return render_template('7-states_list.html', **ctxt)
 
