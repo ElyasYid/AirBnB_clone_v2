@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Fabric module to deploy webstatic archive to webservers."""
+"""A module for web application deployment with Fabric."""
 import os
 from datetime import datetime
 from fabric.api import env, local, put, run, runs_once
@@ -14,7 +14,7 @@ def do_pack():
     if not os.path.isdir("versions"):
         os.mkdir("versions")
     ct = datetime.now()
-    otf = "versions/web_static_{}{}{}{}{}{}.tgz".format(
+    ot = "versions/web_static_{}{}{}{}{}{}.tgz".format(
         ct.year,
         ct.month,
         ct.day,
@@ -23,26 +23,26 @@ def do_pack():
         ct.second
     )
     try:
-        print("Packing web_static to {}".format(otf))
-        local("tar -cvzf {} web_static".format(otf))
-        acs = os.stat(otf).st_size
-        print("web_static packed: {} -> {} Bytes".format(otf, acs))
+        print("Packing web_static to {}".format(ot))
+        local("tar -cvzf {} web_static".format(ot))
+        archize_size = os.stat(ot).st_size
+        print("web_static packed: {} -> {} Bytes".format(ot, archize_size))
     except Exception:
-        otf = None
-    return otf
+        ot = None
+    return ot
 
 
 def do_deploy(archive_path):
-    """Deploys static to host servers.
+    """Deploys the static files to the host servers.
     Args:
-        archive_path (str): path to archived static files.
+        archive_path (str): The path to the archived static files.
     """
     if not os.path.exists(archive_path):
         return False
     fn = os.path.basename(archive_path)
     fdn = fn.replace(".tgz", "")
     fdp = "/data/web_static/releases/{}/".format(fdn)
-    ss = False
+    success = False
     try:
         put(archive_path, "/tmp/{}".format(fn))
         run("mkdir -p {}".format(fdp))
@@ -53,7 +53,14 @@ def do_deploy(archive_path):
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(fdp))
         print('New version deployed!')
-        ss = True
+        success = True
     except Exception:
-        ss = False
-    return ss
+        success = False
+    return success
+
+
+def deploy():
+    """Archives and deploys the static files to the host servers.
+    """
+    archive_path = do_pack()
+    return do_deploy(archive_path) if archive_path else False
