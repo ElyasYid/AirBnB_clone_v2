@@ -5,7 +5,7 @@ from flask import Flask, render_template
 
 
 app = Flask(__name__)
-'''The Flask application instance.'''
+'''The Flask instance.'''
 app.url_map.strict_slashes = False
 
 
@@ -42,7 +42,7 @@ def number_page(n):
 
 @app.route('/number_template/<int:n>')
 def number_template(n):
-    '''The number_template page.'''
+    '''number template page'''
     ctxt = {
         'n': n
     }

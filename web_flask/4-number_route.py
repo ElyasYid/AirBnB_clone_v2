@@ -1,23 +1,22 @@
 #!/usr/bin/python3
-'''A simple Flask web application.
-'''
+'''Flask web app'''
 from flask import Flask
 
 
 app = Flask(__name__)
-'''The Flask application instance.'''
+'''Flask application instance.'''
 app.url_map.strict_slashes = False
 
 
 @app.route('/')
 def index():
-    '''The home page.'''
+    '''homepage index.'''
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb')
 def hbnb():
-    '''The hbnb page.'''
+    '''hbnb page.'''
     return 'HBNB'
 
 
@@ -30,7 +29,7 @@ def c_page(text):
 @app.route('/python/<text>')
 @app.route('/python', defaults={'text': 'is cool'})
 def python_page(text):
-    '''The python page.'''
+    '''python page.'''
     return 'Python {}'.format(text.replace('_', ' '))
 
 
